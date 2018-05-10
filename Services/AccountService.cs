@@ -26,6 +26,17 @@ namespace BTBaseServices.Services
             {
                 account.Password = newPassword;
                 dbContext.BTAccount.Update(account);
+
+                var updatePswRecord = new UpdatePasswordRecord
+                {
+                    AccountId = account.AccountId,
+                    Password = account.Password,
+                    PswHash = account.PswHash,
+                    ExpiredAt = DateTime.Now
+                };
+
+                dbContext.UpdatePasswordRecord.Add(updatePswRecord);
+                dbContext.SaveChanges();
                 return true;
             }
             return false;
