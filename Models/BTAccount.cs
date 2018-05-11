@@ -6,7 +6,6 @@ namespace BTBaseServices.Models
         public string AccountId { get { return AccountRawId.ToString(); } }
         public string UserName { get; set; }
         public string Password { get; set; }
-        public string PswHash { get; set; }
         public string AccountTypes { get; set; }
         public string Nick { get; set; }
         public string Email { get; set; }
@@ -23,8 +22,7 @@ namespace BTBaseServices.Models
                 ac.HasKey(e => e.AccountRawId);
                 ac.Property(e => e.UserName).HasMaxLength(32);
                 ac.HasIndex(e => e.UserName).IsUnique();
-                ac.Property(e => e.Password).HasMaxLength(512).IsRequired();
-                ac.Property(e => e.PswHash);
+                ac.Property(e => e.Password).HasMaxLength(2048).IsRequired();
                 ac.Property(e => e.AccountTypes);
                 ac.Property(e => e.Nick);
                 ac.Property(e => e.Email);

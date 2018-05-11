@@ -5,11 +5,12 @@ namespace BTBaseServices.Models
         public int code;
         public string msg;
         public object content;
+        public ErrorResult error;
     }
 
     public class ErrorResult
     {
-        public int errorCode;
-        public string error;
+        public int code;
+        public string msg;
     }
 }

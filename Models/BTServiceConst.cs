@@ -3,12 +3,12 @@ namespace BTBaseServices
     public class BTServiceConst
     {
         /// Platform Id
-        public const int PLATFORM_UNKNOW = -1;
-        public const int PLATFORM_IOS = 0;
-        public const int PLATFORM_ANDROID = 1;
-        public const int PLATFORM_WINDOWS = 2;
-        public const int PLATFORM_MACOS = 3;
-        public const int PLATFORM_LINUX = 4;
+        public const int PLATFORM_UNKNOW = 0;
+        public const int PLATFORM_IOS = 1;
+        public const int PLATFORM_ANDROID = 2;
+        public const int PLATFORM_WINDOWS = 3;
+        public const int PLATFORM_MACOS = 4;
+        public const int PLATFORM_LINUX = 5;
 
         ///Store Channel Id
         public const string CHANNEL_UNKNOW = "UNKNOW";
@@ -19,9 +19,10 @@ namespace BTBaseServices
 
         /// Account Type
         public const int ACCOUNT_TYPE_LOGOUT = -1;
-        public const int ACCOUNT_TYPE_BTPLATFORM = 0;
-        public const int ACCOUNT_TYPE_GAME_PRODUCER = 1;
-        public const int ACCOUNT_TYPE_GAME_PLAYER = 2;
+        public const int ACCOUNT_TYPE_EMPTY = 0;
+        public const int ACCOUNT_TYPE_BTPLATFORM = 1;
+        public const int ACCOUNT_TYPE_GAME_PRODUCER = 2;
+        public const int ACCOUNT_TYPE_GAME_PLAYER = 4;
 
         /// Account Const
         public const string USER_ID_UNLOGIN = "USERID_UNLOGIN";

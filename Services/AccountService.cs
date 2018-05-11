@@ -11,7 +11,9 @@ namespace BTBaseServices.Services
 
         public BTAccount CreateNewAccount(BTBaseDbContext dbContext, BTAccount newAccount)
         {
-            newAccount.PswHash = PasswordHash.PasswordHash.CreateHash(newAccount.Password);
+            var password = newAccount.Password;
+            var passwordHash = PasswordHash.PasswordHash.CreateHash(password);
+            newAccount.Password = passwordHash;
             newAccount.AccountTypes = BTAccount.ACCOUNT_TYPE_GAME_PLAYER.ToString();
             newAccount.SignDateTs = DateTimeUtil.UnixTimeSpanSec;
             var res = dbContext.BTAccount.Add(newAccount).Entity;
@@ -31,7 +33,6 @@ namespace BTBaseServices.Services
                 {
                     AccountId = account.AccountId,
                     Password = account.Password,
-                    PswHash = account.PswHash,
                     ExpiredAt = DateTime.Now
                 };
 
@@ -69,31 +70,30 @@ namespace BTBaseServices.Services
             BTAccount account = null;
             if (account == null && CommonRegexTestUtil.TestPattern(userstring, CommonRegexTestUtil.PATTERN_ACOUNT_ID))
             {
-                try { account = dbContext.BTAccount.First(a => a.Password == password && a.AccountId == userstring); } catch (System.Exception) { }
+                try { account = dbContext.BTAccount.First(a => a.AccountId == userstring); } catch (System.Exception) { }
             }
 
             if (account == null && CommonRegexTestUtil.TestPattern(userstring, CommonRegexTestUtil.PATTERN_EMAIL))
             {
-                try { account = dbContext.BTAccount.First(a => a.Password == password && a.Email == userstring); } catch (System.Exception) { }
+                try { account = dbContext.BTAccount.First(a => a.Email == userstring); } catch (System.Exception) { }
             }
 
             if (account == null && CommonRegexTestUtil.TestPattern(userstring, CommonRegexTestUtil.PATTERN_USERNAME))
             {
-                try { account = dbContext.BTAccount.First(a => a.Password == password && a.UserName == userstring); } catch (System.Exception) { }
+                try { account = dbContext.BTAccount.First(a => a.UserName == userstring); } catch (System.Exception) { }
             }
 
             if (account == null && CommonRegexTestUtil.TestPattern(userstring, CommonRegexTestUtil.PATTERN_PHONE_NO))
             {
-                try { account = dbContext.BTAccount.First(a => a.Password == password && a.Mobile == userstring); } catch (System.Exception) { }
+                try { account = dbContext.BTAccount.First(a => a.Mobile == userstring); } catch (System.Exception) { }
             }
 
-            // Save server cpu resources without validate password and pswhash
-            // if (account != null && PasswordHash.PasswordHash.ValidatePassword(account.Password, account.PswHash))
-            // {
-            //     account = null;
-            // }
+            if (account != null && PasswordHash.PasswordHash.ValidatePassword(password, account.Password))
+            {
+                return account;
+            }
 
-            return account;
+            return null;
         }
     }
 }
