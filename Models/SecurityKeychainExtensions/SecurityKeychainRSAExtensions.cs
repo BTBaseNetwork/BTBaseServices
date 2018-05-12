@@ -5,9 +5,6 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BTBaseServices
 {
-
-    #region RSA
-
     public static class SecurityKeychainRSAExtensions
     {
         public const string ALGORITHM_RSA = "RSA";
@@ -29,12 +26,17 @@ namespace BTBaseServices
 
         public static RSAParameters ReadRSAParameters(this SecurityKeychain keychain, bool readPrivateKey)
         {
-            var rsap = new RSACryptoServiceProvider();
-            var cspblob = Convert.FromBase64String(readPrivateKey ? keychain.PrivateKey : keychain.PublicKey);
-            rsap.ImportCspBlob(cspblob);
-            return rsap.ExportParameters(readPrivateKey);
+            if (keychain.Algorithm == ALGORITHM_RSA)
+            {
+                var rsap = new RSACryptoServiceProvider();
+                var cspblob = Convert.FromBase64String(readPrivateKey ? keychain.PrivateKey : keychain.PublicKey);
+                rsap.ImportCspBlob(cspblob);
+                return rsap.ExportParameters(readPrivateKey);
+            }
+            else
+            {
+                throw new System.InvalidOperationException("Not A RSA Security Keychain");
+            }
         }
     }
-
-    #endregion
 }

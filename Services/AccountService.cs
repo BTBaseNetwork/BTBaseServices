@@ -24,9 +24,10 @@ namespace BTBaseServices.Services
         public bool UpdatePassword(BTBaseDbContext dbContext, string accountId, string originPassword, string newPassword)
         {
             var account = dbContext.BTAccount.Find(long.Parse(accountId));
-            if (account != null && account.Password == originPassword)
+
+            if (account != null && PasswordHash.PasswordHash.ValidatePassword(originPassword, account.Password))
             {
-                account.Password = newPassword;
+                account.Password = PasswordHash.PasswordHash.CreateHash(newPassword);
                 dbContext.BTAccount.Update(account);
 
                 var updatePswRecord = new UpdatePasswordRecord
@@ -50,14 +51,15 @@ namespace BTBaseServices.Services
             {
                 account.Nick = newNick;
                 dbContext.BTAccount.Update(account);
+                dbContext.SaveChanges();
                 return true;
             }
             return false;
         }
 
-        public bool IsUsernameAvaiable(BTBaseDbContext dbContext, string username)
+        public bool IsUsernameExists(BTBaseDbContext dbContext, string username)
         {
-            return dbContext.BTAccount.Count(x => x.UserName == username) == 0;
+            return dbContext.BTAccount.Count(x => x.UserName == username) > 0;
         }
 
         public BTAccount GetProfile(BTBaseDbContext dbContext, string accountId)
