@@ -44,12 +44,48 @@ namespace BTBaseServices.Services
             return false;
         }
 
+        public bool ResetPassword(BTBaseDbContext dbContext, string accountId, string newPassword)
+        {
+            var account = dbContext.BTAccount.Find(long.Parse(accountId));
+
+            if (account != null)
+            {
+                account.Password = PasswordHash.PasswordHash.CreateHash(newPassword);
+                dbContext.BTAccount.Update(account);
+
+                var updatePswRecord = new UpdatePasswordRecord
+                {
+                    AccountId = account.AccountId,
+                    Password = account.Password,
+                    ExpiredAt = DateTime.Now
+                };
+
+                dbContext.UpdatePasswordRecord.Add(updatePswRecord);
+                dbContext.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
         public bool UpdateNick(BTBaseDbContext dbContext, string accountId, string newNick)
         {
             var account = dbContext.BTAccount.Find(long.Parse(accountId));
             if (account != null)
             {
                 account.Nick = newNick;
+                dbContext.BTAccount.Update(account);
+                dbContext.SaveChanges();
+                return true;
+            }
+            return false;
+        }
+
+        public bool UpdateEmail(BTBaseDbContext dbContext, string accountId, string password, string originEmail, string newEmail)
+        {
+            var account = GetProfile(dbContext, accountId);
+            if (account != null && account.Email == originEmail && PasswordHash.PasswordHash.ValidatePassword(password, account.Password))
+            {
+                account.Email = newEmail;
                 dbContext.BTAccount.Update(account);
                 dbContext.SaveChanges();
                 return true;
