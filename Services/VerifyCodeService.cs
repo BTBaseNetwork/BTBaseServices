@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using BahamutCommon.Utils;
@@ -62,24 +63,37 @@ namespace BTBaseServices.Services
         }
 
 
-        public async Task<bool> SendVerifyCodeAsync(BTVerifyCode code)
+        public async Task<bool> SendVerifyCodeAsync(BTVerifyCode code, object info)
         {
             switch (code.ReceiverType)
             {
-                case BTVerifyCode.REC_TYPE_EMAIL: return await SendVerifyCodeByEmailAsync(code);
-                case BTVerifyCode.REC_TYPE_MOBILE: return await SendVerifyCodeByMobileAsync(code);
+                case BTVerifyCode.REC_TYPE_EMAIL: return await SendVerifyCodeByAliEmailAsync(code, info);
+                case BTVerifyCode.REC_TYPE_MOBILE: return await SendVerifyCodeByMobileAsync(code, info);
                 default: return false;
             }
         }
 
-        private async Task<bool> SendVerifyCodeByMobileAsync(BTVerifyCode code)
+        private async Task<bool> SendVerifyCodeByMobileAsync(BTVerifyCode code, object info)
         {
             throw new NotImplementedException();
         }
 
-        private async Task<bool> SendVerifyCodeByEmailAsync(BTVerifyCode code)
+        private async Task<bool> SendVerifyCodeByAliEmailAsync(BTVerifyCode code, object info)
         {
-            throw new NotImplementedException();
+            var mail = new AliApilUtils.AliMail
+            {
+                Action = "SingleSendMail",
+                AccountName = "verification-code@btbase.mobi",
+                ReplyToAddress = false,
+                AddressType = AliApilUtils.AliMail.ADDR_TYPE_ACCOUNT,
+                ToAddress = code.Receiver,
+                FromAlias = "no-replay",
+                Subject = "Verify Code",
+                HtmlBody = "<p></p>",
+                ClickTrace = AliApilUtils.AliMail.CLICK_TRACE_OFF
+            };
+            var aliReqfields = (AliApilUtils.CommonReqFields)info;
+            return await AliApilUtils.SendMailAsync(aliReqfields, mail);
         }
     }
 }

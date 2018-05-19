@@ -80,10 +80,10 @@ namespace BTBaseServices.Services
             return false;
         }
 
-        public bool UpdateEmail(BTBaseDbContext dbContext, string accountId, string password, string originEmail, string newEmail)
+        public bool UpdateEmail(BTBaseDbContext dbContext, string accountId, string newEmail)
         {
             var account = GetProfile(dbContext, accountId);
-            if (account != null && account.Email == originEmail && PasswordHash.PasswordHash.ValidatePassword(password, account.Password))
+            if (account != null)
             {
                 account.Email = newEmail;
                 dbContext.BTAccount.Update(account);

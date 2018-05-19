@@ -44,5 +44,6 @@ namespace BTBaseServices.Models
         public const int STATUS_VALID = 1;
         public const int REQ_FOR_NOTHING = 0;
         public const int REQ_FOR_RESET_PASSWORD = 1;
+        public const int REQ_FOR_RESET_EMAIL = 1;
     }
 }
