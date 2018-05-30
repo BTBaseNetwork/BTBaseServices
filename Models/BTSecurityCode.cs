@@ -2,7 +2,7 @@ using System;
 
 namespace BTBaseServices.Models
 {
-    public partial class BTVerifyCode
+    public partial class BTSecurityCode
     {
         public long ID { get; set; }
         public string AccountId { get; set; }
@@ -15,11 +15,11 @@ namespace BTBaseServices.Models
         public DateTime ExpiredAt { get; set; }
     }
 
-    public partial class BTVerifyCode
+    public partial class BTSecurityCode
     {
         public static void OnDbContextModelCreating(Microsoft.EntityFrameworkCore.ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<BTVerifyCode>(ac =>
+            modelBuilder.Entity<BTSecurityCode>(ac =>
             {
                 ac.HasKey(e => e.ID);
                 ac.Property(e => e.AccountId).HasMaxLength(32).IsRequired();
@@ -34,7 +34,7 @@ namespace BTBaseServices.Models
         }
     }
 
-    public partial class BTVerifyCode
+    public partial class BTSecurityCode
     {
         public const int REC_TYPE_UNKNOW = 0;
         public const int REC_TYPE_MOBILE = 1;
@@ -44,6 +44,6 @@ namespace BTBaseServices.Models
         public const int STATUS_VALID = 1;
         public const int REQ_FOR_NOTHING = 0;
         public const int REQ_FOR_RESET_PASSWORD = 1;
-        public const int REQ_FOR_RESET_EMAIL = 1;
+        public const int REQ_FOR_RESET_EMAIL = 2;
     }
 }

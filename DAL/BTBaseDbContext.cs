@@ -14,7 +14,7 @@ namespace BTBaseServices.DAL
         public virtual DbSet<SecurityKeychain> SecurityKeychain { get; set; }
         public virtual DbSet<UpdatePasswordRecord> UpdatePasswordRecord { get; set; }
         public virtual DbSet<UpdateEmailRecord> UpdateEmailRecord { get; set; }
-        public virtual DbSet<BTVerifyCode> BTVerifyCode { get; set; }
+        public virtual DbSet<BTSecurityCode> BTSecurityCode { get; set; }
 
         public BTBaseDbContext(DbContextOptions options) : base(options) { }
 
@@ -28,7 +28,7 @@ namespace BTBaseServices.DAL
             BTBaseServices.Models.SecurityKeychain.OnDbContextModelCreating(modelBuilder);
             BTBaseServices.Models.UpdatePasswordRecord.OnDbContextModelCreating(modelBuilder);
             BTBaseServices.Models.UpdateEmailRecord.OnDbContextModelCreating(modelBuilder);
-            BTBaseServices.Models.BTVerifyCode.OnDbContextModelCreating(modelBuilder);
+            BTBaseServices.Models.BTSecurityCode.OnDbContextModelCreating(modelBuilder);
         }
     }
 }

@@ -41,4 +41,25 @@ namespace BTBaseServices.Models
         public const string USER_ID_UNLOGIN = "USERID_UNLOGIN";
         public const string ACCOUNT_ID_UNLOGIN = "000000";
     }
+
+    public partial class BTAccount
+    {
+        public string GetPartitialHidedEmail()
+        {
+            if (string.IsNullOrWhiteSpace(Email))
+            {
+                return null;
+            }
+            return string.Format("{0}****{1}", Email.Substring(0, 1), Email.Substring(Email.IndexOf('@')));
+        }
+
+        public string GetPartitialHidedMobile()
+        {
+            if (string.IsNullOrWhiteSpace(Mobile))
+            {
+                return null;
+            }
+            return string.Format("{0}****{1}", Mobile.Substring(0, 1), Mobile.Substring(Mobile.Length - 4));
+        }
+    }
 }

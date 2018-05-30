@@ -67,19 +67,26 @@ public class AliApilUtils
         req.Subject = mail.Subject;
         req.TextBody = mail.TextBody;
         req.ToAddress = mail.ToAddress;
-        return await new Task<bool>(() =>
+        req.Method = MethodType.GET;
+        return await Task.Run(() =>
         {
             try
             {
                 var response = client.GetAcsResponse(req);
                 return response.HttpResponse.IsSuccess();
             }
-            catch (ServerException)
+            catch (ServerException ex)
             {
+#if DEBUG
+                System.Console.WriteLine(ex.Message);
+#endif
                 return false;
             }
-            catch (ClientException)
+            catch (ClientException ex)
             {
+#if DEBUG
+                System.Console.WriteLine(ex.Message);
+#endif
                 return false;
             }
         });
