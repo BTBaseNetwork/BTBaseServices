@@ -25,7 +25,7 @@ namespace BTBaseServices.Models
                 ac.Property(e => e.CreateDate);
                 ac.Property(e => e.PublicKey);
                 ac.Property(e => e.PrivateKey);
-                ac.HasIndex(e => e.Note);
+                ac.Property(e => e.Note);
             });
         }
     }
