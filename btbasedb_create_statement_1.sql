@@ -55,7 +55,7 @@ CREATE TABLE `BTSecurityCode` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `AccountId` varchar(32) NOT NULL,
   `Code` varchar(32) DEFAULT NULL,
-  `ExpiredAt` datetime NOT NULL,
+  `ExpiredOn` datetime NOT NULL,
   `Receiver` varchar(128) DEFAULT NULL,
   `ReceiverType` int(11) NOT NULL,
   `RequestDate` datetime NOT NULL,
@@ -87,7 +87,7 @@ CREATE TABLE `UpdateEmailRecord` (
 CREATE TABLE `UpdatePasswordRecord` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `AccountId` varchar(32) NOT NULL,
-  `ExpiredAt` datetime NOT NULL,
+  `ExpiredOn` datetime NOT NULL,
   `Password` varchar(2048) NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

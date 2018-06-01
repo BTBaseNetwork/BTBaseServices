@@ -19,14 +19,14 @@ namespace BTBaseServices.Services
                                  r.Receiver == receiver &&
                                  r.ReceiverType == r.ReceiverType &&
                                  r.Status == BTSecurityCode.STATUS_VALID &&
-                                 r.ExpiredAt > now
+                                 r.ExpiredOn > now
                             select r;
 
             if (existsRes.Count() > 0)
             {
                 return existsRes.First();
             }
-            var expiredAt = now.Add(Expiry);
+            var expiredOn = now.Add(Expiry);
             var code = new BTSecurityCode
             {
                 AccountId = accountId,
@@ -35,7 +35,7 @@ namespace BTBaseServices.Services
                 Receiver = receiver,
                 ReceiverType = receiverType,
                 Status = BTSecurityCode.STATUS_VALID,
-                ExpiredAt = expiredAt,
+                ExpiredOn = expiredOn,
                 Code = NewCode(codeLength, onlyNumber).ToLower()
             };
             dbContext.BTSecurityCode.Add(code);
@@ -46,7 +46,7 @@ namespace BTBaseServices.Services
         public bool VerifyCode(BTBaseDbContext dbContext, string accountId, int requestFor, string code)
         {
             var now = DateTime.Now;
-            var lst = from c in dbContext.BTSecurityCode where c.AccountId == accountId && c.RequestFor == requestFor && c.Code == code && c.ExpiredAt > now && c.Status == BTSecurityCode.STATUS_VALID select c;
+            var lst = from c in dbContext.BTSecurityCode where c.AccountId == accountId && c.RequestFor == requestFor && c.Code == code && c.ExpiredOn > now && c.Status == BTSecurityCode.STATUS_VALID select c;
             if (lst.Count() > 0)
             {
                 var result = lst.First();
@@ -112,9 +112,9 @@ namespace BTBaseServices.Services
                 ReplyToAddress = false,
                 AddressType = AliApilUtils.AliMail.ADDR_TYPE_ACCOUNT,
                 ToAddress = code.Receiver,
-                FromAlias = "No-Reply",
-                Subject = "Security Code For " + verifyCodeType,
-                HtmlBody = string.Format("<p>Your Security Code:</p><br/><h1>{0}</h1>", code.Code),
+                FromAlias = "no-reply",
+                Subject = string.Format("Security Code For {0}:{1}", verifyCodeType, code.Code),
+                HtmlBody = string.Format("<p>Security Code:{0}</p><p>This Code Will Expired On: {1}</p>", code.Code, code.ExpiredOn.ToShortDateString()),
                 ClickTrace = AliApilUtils.AliMail.CLICK_TRACE_OFF
             };
             var aliReqfields = (AliApilUtils.CommonReqFields)info;

@@ -12,7 +12,7 @@ namespace BTBaseServices.Models
         public string Receiver { get; set; }
         public string Code { get; set; }
         public DateTime RequestDate { get; set; }
-        public DateTime ExpiredAt { get; set; }
+        public DateTime ExpiredOn { get; set; }
     }
 
     public partial class BTSecurityCode
@@ -29,7 +29,7 @@ namespace BTBaseServices.Models
                 ac.Property(e => e.Receiver).HasMaxLength(128);
                 ac.Property(e => e.Code).HasMaxLength(32);
                 ac.Property(e => e.RequestDate);
-                ac.Property(e => e.ExpiredAt);
+                ac.Property(e => e.ExpiredOn);
             });
         }
     }
