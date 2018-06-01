@@ -77,16 +77,12 @@ public class AliApilUtils
             }
             catch (ServerException ex)
             {
-#if DEBUG
                 System.Console.WriteLine(ex.Message);
-#endif
                 return false;
             }
             catch (ClientException ex)
             {
-#if DEBUG
                 System.Console.WriteLine(ex.Message);
-#endif
                 return false;
             }
         });
