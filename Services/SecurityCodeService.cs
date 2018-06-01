@@ -112,7 +112,7 @@ namespace BTBaseServices.Services
                 ReplyToAddress = false,
                 AddressType = AliApilUtils.AliMail.ADDR_TYPE_ACCOUNT,
                 ToAddress = code.Receiver,
-                FromAlias = "BTBaseNetwork",
+                FromAlias = "Bluetime Game Service",
                 Subject = "Security Code For " + verifyCodeType,
                 HtmlBody = string.Format("<p>Your Security Code:</p><br/><h1>{0}</h1>", code.Code),
                 ClickTrace = AliApilUtils.AliMail.CLICK_TRACE_OFF
