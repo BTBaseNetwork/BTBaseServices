@@ -78,9 +78,8 @@ CREATE TABLE `SecurityKeychain` (
 CREATE TABLE `UpdateEmailRecord` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `AccountId` varchar(32) NOT NULL,
-  `Email` text NOT NULL,
+  `ReplacedEmail` text NOT NULL,
   `RequestDate` datetime NOT NULL,
-  `Status` int(11) NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

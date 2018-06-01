@@ -6,8 +6,7 @@ namespace BTBaseServices.Models
     {
         public long ID { get; set; }
         public string AccountId { get; set; }
-        public string Email { get; set; }
-        public int Status { get; set; }
+        public string ReplacedEmail { get; set; }
         public DateTime RequestDate { get; set; }
     }
 
@@ -19,8 +18,7 @@ namespace BTBaseServices.Models
             {
                 ac.HasKey(e => e.ID);
                 ac.Property(e => e.AccountId).HasMaxLength(32).IsRequired();
-                ac.Property(e => e.Email).IsRequired();
-                ac.Property(e => e.Status);
+                ac.Property(e => e.ReplacedEmail).IsRequired();
                 ac.Property(e => e.RequestDate);
             });
         }

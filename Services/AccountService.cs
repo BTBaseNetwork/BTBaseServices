@@ -83,14 +83,21 @@ namespace BTBaseServices.Services
         public bool UpdateEmail(BTBaseDbContext dbContext, string accountId, string newEmail)
         {
             var account = GetProfile(dbContext, accountId);
-            if (account != null)
+
+            if (account == null)
             {
+                return false;
+            }
+
+            if (newEmail.ToLower() != account.Email.ToLower())
+            {
+                dbContext.UpdateEmailRecord.Add(new UpdateEmailRecord { AccountId = accountId, ReplacedEmail = account.Email, RequestDate = DateTime.Now });
                 account.Email = newEmail;
                 dbContext.BTAccount.Update(account);
                 dbContext.SaveChanges();
-                return true;
             }
-            return false;
+
+            return true;
         }
 
         public bool IsUsernameExists(BTBaseDbContext dbContext, string username)

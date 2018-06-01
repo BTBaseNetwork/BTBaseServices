@@ -113,8 +113,8 @@ namespace BTBaseServices.Services
                 AddressType = AliApilUtils.AliMail.ADDR_TYPE_ACCOUNT,
                 ToAddress = code.Receiver,
                 FromAlias = "no-reply",
-                Subject = string.Format("Security Code For {0}:{1}", verifyCodeType, code.Code),
-                HtmlBody = string.Format("<p>Security Code:{0}</p><p>This Code Will Expired On: {1}</p>", code.Code, code.ExpiredOn.ToShortDateString()),
+                Subject = string.Format("Security Code: {0}", code.Code),
+                HtmlBody = string.Format("<p>Security Code:{0}</p><p>Only Use For {1}</p><p>This Code Will Expired On: {2}</p>", code.Code, verifyCodeType, code.ExpiredOn.ToString()),
                 ClickTrace = AliApilUtils.AliMail.CLICK_TRACE_OFF
             };
             var aliReqfields = (AliApilUtils.CommonReqFields)info;
