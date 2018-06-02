@@ -75,50 +75,5 @@ namespace BTBaseServices.Services
             }
             return sb.ToString();
         }
-
-
-        public async Task<bool> SendCodeAsync(BTSecurityCode code, object info)
-        {
-            switch (code.ReceiverType)
-            {
-                case BTSecurityCode.REC_TYPE_EMAIL: return await SendCodeByAliEmailAsync(code, info);
-                case BTSecurityCode.REC_TYPE_MOBILE: return await SendCodeByMobileAsync(code, info);
-                default: return false;
-            }
-        }
-
-        private async Task<bool> SendCodeByMobileAsync(BTSecurityCode code, object info)
-        {
-            return await Task.Run(() =>
-            {
-                //TODO: to finish this;
-                return false;
-            });
-        }
-
-        private async Task<bool> SendCodeByAliEmailAsync(BTSecurityCode code, object info)
-        {
-            string verifyCodeType = null;
-            switch (code.RequestFor)
-            {
-                case BTSecurityCode.REQ_FOR_RESET_EMAIL: verifyCodeType = "Update Email"; break;
-                case BTSecurityCode.REQ_FOR_RESET_PASSWORD: verifyCodeType = "Reset Password"; break;
-                default: return false;
-            }
-            var mail = new AliApilUtils.AliMail
-            {
-                Action = "SingleSendMail",
-                AccountName = "verification-code@btbase.mobi",
-                ReplyToAddress = false,
-                AddressType = AliApilUtils.AliMail.ADDR_TYPE_ACCOUNT,
-                ToAddress = code.Receiver,
-                FromAlias = "no-reply",
-                Subject = string.Format("Security Code: {0}", code.Code),
-                HtmlBody = string.Format("<p>Security Code:{0}</p><p>Only Use For {1}</p><p>This Code Will Expired On: {2}</p>", code.Code, verifyCodeType, code.ExpiredOn.ToString()),
-                ClickTrace = AliApilUtils.AliMail.CLICK_TRACE_OFF
-            };
-            var aliReqfields = (AliApilUtils.CommonReqFields)info;
-            return await AliApilUtils.SendMailAsync(aliReqfields, mail);
-        }
     }
 }
