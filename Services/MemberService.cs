@@ -30,7 +30,7 @@ namespace BTBaseServices.Services
             var listOrdered = from o in dbContext.BTMemberOrder where o.OrderKey == order.OrderKey select o.ID;
             if (listOrdered.Count() > 0)
             {
-                //The Order Is Finished, Can't Request Same Order Twice
+                //The Order Is Finished
                 return false;
             }
 
@@ -131,11 +131,11 @@ namespace BTBaseServices.Services
 
                         if (suc)
                         {
-                            return new ApiResult { code = 200 };
+                            return new ApiResult { code = 200, msg = "Order Finished" };
                         }
                         else
                         {
-                            return new ApiResult { code = 404, error = new ErrorResult { code = 404, msg = "Is A Completed Order" } };
+                            return new ApiResult { code = 200, msg = "Is A Completed Order" };
                         }
                     }
                     else
@@ -145,7 +145,7 @@ namespace BTBaseServices.Services
                 }
                 else
                 {
-                    return new ApiResult { code = 400, error = new ErrorResult { code = statusCode } };
+                    return new ApiResult { code = 400, error = new ErrorResult { code = statusCode, msg = "App Store Error" } };
                 }
 
             }
