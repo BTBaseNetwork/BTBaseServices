@@ -34,7 +34,7 @@ namespace BTBaseServices.Services
                 {
                     AccountId = account.AccountId,
                     Password = account.Password,
-                    ExpiredOn = DateTime.Now
+                    Expires = DateTime.Now
                 };
 
                 dbContext.UpdatePasswordRecord.Add(updatePswRecord);
@@ -57,7 +57,7 @@ namespace BTBaseServices.Services
                 {
                     AccountId = account.AccountId,
                     Password = account.Password,
-                    ExpiredOn = DateTime.Now
+                    Expires = DateTime.Now
                 };
 
                 dbContext.UpdatePasswordRecord.Add(updatePswRecord);

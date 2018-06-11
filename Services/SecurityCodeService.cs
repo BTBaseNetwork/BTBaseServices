@@ -19,14 +19,14 @@ namespace BTBaseServices.Services
                                  r.Receiver == receiver &&
                                  r.ReceiverType == r.ReceiverType &&
                                  r.Status == BTSecurityCode.STATUS_VALID &&
-                                 r.ExpiredOn > now
+                                 r.Expires > now
                             select r;
 
             if (existsRes.Count() > 0)
             {
                 return existsRes.First();
             }
-            var expiredOn = now.Add(Expiry);
+            var expires = now.Add(Expiry);
             var code = new BTSecurityCode
             {
                 AccountId = accountId,
@@ -35,7 +35,7 @@ namespace BTBaseServices.Services
                 Receiver = receiver,
                 ReceiverType = receiverType,
                 Status = BTSecurityCode.STATUS_VALID,
-                ExpiredOn = expiredOn,
+                Expires = expires,
                 Code = NewCode(codeLength, onlyNumber).ToLower()
             };
             dbContext.BTSecurityCode.Add(code);
@@ -46,7 +46,7 @@ namespace BTBaseServices.Services
         public bool VerifyCode(BTBaseDbContext dbContext, string accountId, int requestFor, string code)
         {
             var now = DateTime.Now;
-            var lst = from c in dbContext.BTSecurityCode where c.AccountId == accountId && c.RequestFor == requestFor && c.Code == code && c.ExpiredOn > now && c.Status == BTSecurityCode.STATUS_VALID select c;
+            var lst = from c in dbContext.BTSecurityCode where c.AccountId == accountId && c.RequestFor == requestFor && c.Code == code && c.Expires > now && c.Status == BTSecurityCode.STATUS_VALID select c;
             if (lst.Count() > 0)
             {
                 var result = lst.First();
