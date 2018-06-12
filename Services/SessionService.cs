@@ -135,50 +135,5 @@ namespace BTBaseServices.Services
             dbContext.BTDeviceSession.UpdateRange(sessions);
             dbContext.SaveChanges();
         }
-
-        #region Fast Session
-        private static int FastSesseionLimited = 300;
-        private static long RefreshFastSesseionLimitedTicks = DateTime.Now.Ticks;
-        private static long RefreshFastSesseionLimitedIntervalTicks = TimeSpan.FromMinutes(5).Ticks;
-        private static IDictionary<string, string> FastUserSessions = new Dictionary<string, string>();
-        private static Queue<string> FastUserSessionAccounts = new Queue<string>();
-        private static void RefreshFastSesseionLimited()
-        {
-            if (DateTime.Now.Ticks - RefreshFastSesseionLimitedTicks > RefreshFastSesseionLimitedIntervalTicks)
-            {
-                var numStr = System.Environment.GetEnvironmentVariable("FAST_SESSION_LIMITED");
-                int count;
-                if (int.TryParse(numStr, out count))
-                {
-                    FastSesseionLimited = count;
-                }
-                RefreshFastSesseionLimitedTicks = DateTime.Now.Ticks;
-            }
-        }
-
-        public bool FastTestAccountSession(BTBaseDbContext dbContext, string accountId, string deviceId, string session)
-        {
-            string verifyStr;
-            var verifyCode = deviceId + session;
-            if (FastUserSessions.TryGetValue(accountId, out verifyStr) && verifyStr == verifyCode)
-            {
-                return true;
-            }
-            RefreshFastSesseionLimited();
-            var ds = TestSession(dbContext, deviceId, accountId, session, true);
-            if (ds != null)
-            {
-                FastUserSessions[accountId] = verifyCode;
-                FastUserSessionAccounts.Enqueue(accountId);
-                while (FastUserSessionAccounts.Count > FastSesseionLimited)
-                {
-                    FastUserSessions.Remove(FastUserSessionAccounts.Peek());
-                }
-                return true;
-            }
-            return false;
-        }
-
-        #endregion
     }
 }
