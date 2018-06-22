@@ -27,17 +27,10 @@ namespace BTBaseServices.Services
 
         public bool RechargeMember(BTBaseDbContext dbContext, BTMemberOrder order)
         {
-            var listOrdered = from o in dbContext.BTMemberOrder where o.OrderKey == order.OrderKey select o.ID;
-            if (listOrdered.Count() > 0)
-            {
-                //The Order Is Finished
-                return false;
-            }
-
-            var list = from u in dbContext.BTMember where u.AccountId == order.AccountId && u.MemberType == order.MemberType select u;
-            BTMember member;
+            var member = dbContext.BTMember.FirstOrDefault(u => u.AccountId == order.AccountId && u.MemberType == order.MemberType);
+            ;
             var now = DateTimeUtil.UnixTimeSpanSec;
-            if (list.Count() == 0)
+            if (member == null)
             {
                 member = new BTMember
                 {
@@ -50,7 +43,6 @@ namespace BTBaseServices.Services
             }
             else
             {
-                member = list.First();
                 member.ExpiredDateTs = Math.Max(member.ExpiredDateTs, now) + order.ChargeTimes;
                 member.MemberType = order.MemberType;
                 dbContext.BTMember.Update(member);
@@ -58,98 +50,75 @@ namespace BTBaseServices.Services
             order.OrderDateTs = now;
             order.ChargedExpiredDateTime = DateTimeUtil.UnixTimeSpanZeroDate().Add(TimeSpan.FromSeconds(member.ExpiredDateTs));
             dbContext.BTMemberOrder.Add(order);
-            dbContext.SaveChanges();
             return true;
         }
     }
 
     #region iTunes App Store
-    public partial class MemberService
-    {
-        public async Task<ApiResult> VerifyReceiptAppStoreAsync(BTBaseDbContext dbContext, string accountId, string productId, string receiptData, bool sandbox)
-        {
-            var res = await SendReceiptAppStoreAsync(dbContext, accountId, productId, receiptData, sandbox);
-            if (res.code != 200)
-            {
-                if (res.error.code == 21007)
-                {
-                    return await SendReceiptAppStoreAsync(dbContext, accountId, productId, receiptData, true);
-                }
-                else if (res.error.code == 21008)
-                {
-                    return await SendReceiptAppStoreAsync(dbContext, accountId, productId, receiptData, false);
-                }
-            }
-            return res;
-        }
+    /*
+   public partial class MemberService
+   {
 
-        private async Task<ApiResult> SendReceiptAppStoreAsync(BTBaseDbContext dbContext, string accountId, string productId, string receiptData, bool sandbox)
-        {
-            //购买凭证验证地址  
-            const string certificateUrl = "https://buy.itunes.apple.com/verifyReceipt";
-            //测试的购买凭证验证地址   
-            const string certificateUrlTest = "https://sandbox.itunes.apple.com/verifyReceipt";
+       public async Task<ApiResult> VerifyReceiptAppStoreAsync(BTBaseDbContext dbContext, string accountId, string productId, string receiptData, bool sandbox)
+       {
+           var res = await SendReceiptAppStoreAsync(dbContext, accountId, productId, receiptData, sandbox);
+           if (res.code != 200)
+           {
+               if (res.error.code == 21007)
+               {
+                   return await SendReceiptAppStoreAsync(dbContext, accountId, productId, receiptData, true);
+               }
+               else if (res.error.code == 21008)
+               {
+                   return await SendReceiptAppStoreAsync(dbContext, accountId, productId, receiptData, false);
+               }
+           }
+           return res;
+       }
 
-            var url = sandbox ? certificateUrlTest : certificateUrl;
-            var postBody = new Dictionary<string, string>() { { "receipt-data", receiptData } };
+       private async Task<ApiResult> SendReceiptAppStoreAsync(BTBaseDbContext dbContext, string accountId, string productId, string receiptData, bool sandbox)
+       {
+           //购买凭证验证地址  
+           const string certificateUrl = "https://buy.itunes.apple.com/verifyReceipt";
+           //测试的购买凭证验证地址   
+           const string certificateUrlTest = "https://sandbox.itunes.apple.com/verifyReceipt";
 
-            using (var client = new HttpClient())
-            {
-                var content = new StringContent(JsonConvert.SerializeObject(postBody, Formatting.None), System.Text.Encoding.UTF8, "application/json");
-                var msg = await client.PostAsync(url, content);
-                var result = await msg.Content.ReadAsStringAsync();
-                var jsonResult = JsonConvert.DeserializeObject<JObject>(result);
-                var statusCode = jsonResult.GetValue("status").Value<int>();
-                if (statusCode == 0)
-                {
-                    string transactionId = null;
-                    string receiptProductId = null;
-                    var receipts = jsonResult["receipt"]["in_app"].HasValues ? jsonResult["receipt"]["in_app"] : jsonResult["receipt"];
+           var url = sandbox ? certificateUrlTest : certificateUrl;
+           var postBody = new Dictionary<string, string>() { { "receipt-data", receiptData } };
 
-                    foreach (var item in receipts.ToArray())
-                    {
-                        var product_id = item["product_id"].Value<string>();
-                        if (product_id == productId)
-                        {
-                            transactionId = item["transaction_id"].Value<string>().ToString();
-                            receiptProductId = product_id;
-                        }
-                    }
+           using (var client = new HttpClient())
+           {
+               var content = new StringContent(JsonConvert.SerializeObject(postBody, Formatting.None), System.Text.Encoding.UTF8, "application/json");
+               var msg = await client.PostAsync(url, content);
+               var result = await msg.Content.ReadAsStringAsync();
+               var jsonResult = JsonConvert.DeserializeObject<JObject>(result);
+               var statusCode = jsonResult.GetValue("status").Value<int>();
+               if (statusCode == 0)
+               {
+                   string transactionId = null;
+                   string receiptProductId = null;
+                   var receipts = jsonResult["receipt"]["in_app"].HasValues ? jsonResult["receipt"]["in_app"] : jsonResult["receipt"];
 
-                    BTMemberProduct product = null;
-                    if (!string.IsNullOrEmpty(receiptProductId) && BTMemberProduct.TryParseIAPProductId(productId, out product))
-                    {
-                        var suc = RechargeMember(dbContext, new BTMemberOrder
-                        {
-                            OrderKey = transactionId,
-                            AccountId = accountId,
-                            ProductId = productId,
-                            ReceiptData = receiptData,
-                            MemberType = product.MemberType,
-                            ChargeTimes = product.ChargeTimes
-                        });
+                   foreach (var item in receipts.ToArray())
+                   {
+                       var product_id = item["product_id"].Value<string>();
+                       if (product_id == productId)
+                       {
+                           transactionId = item["transaction_id"].Value<string>().ToString();
+                           receiptProductId = product_id;
+                       }
+                   }
 
-                        if (suc)
-                        {
-                            return new ApiResult { code = 200, msg = "Order Finished" };
-                        }
-                        else
-                        {
-                            return new ApiResult { code = 200, msg = "Is A Completed Order" };
-                        }
-                    }
-                    else
-                    {
-                        return new ApiResult { code = 400, error = new ErrorResult { code = 400, msg = "Unmatched Product Id" } };
-                    }
-                }
-                else
-                {
-                    return new ApiResult { code = 400, error = new ErrorResult { code = statusCode, msg = "App Store Error" } };
-                }
 
-            }
-        }
-    }
+               }
+               else
+               {
+                   return new ApiResult { code = 400, error = new ErrorResult { code = statusCode, msg = "App Store Error" } };
+               }
+
+           }
+       }
+   }
+    */
     #endregion
 }

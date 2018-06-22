@@ -1,5 +1,16 @@
 CREATE DATABASE `btbasedb` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `btbasedb`;
+
+CREATE TABLE `AppleStoreIAPOrder` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `AccountId` varchar(32) NOT NULL,
+  `Date` datetime NOT NULL,
+  `OrderKey` varchar(512) DEFAULT NULL,
+  `ProductId` text,
+  `ReceiptData` text,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
 CREATE TABLE `BTAccount` (
   `AccountRawId` bigint(20) NOT NULL AUTO_INCREMENT,
   `AccountTypes` text,
@@ -43,13 +54,10 @@ CREATE TABLE `BTMemberOrder` (
   `ChargedExpiredDateTime` datetime NOT NULL,
   `MemberType` int(11) NOT NULL,
   `OrderDateTs` double NOT NULL,
-  `OrderKey` varchar(512) DEFAULT NULL,
-  `ProductId` text,
-  `ReceiptData` text,
+  `PaymentType` varchar(45),
   PRIMARY KEY (`ID`),
-  KEY `IX_BTMemberOrder_AccountId` (`AccountId`),
-  KEY `IX_BTMemberOrder_OrderKey` (`OrderKey`(255))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  KEY `IX_BTMemberOrder_AccountId` (`AccountId`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `BTSecurityCode` (
   `ID` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -62,6 +70,28 @@ CREATE TABLE `BTSecurityCode` (
   `RequestFor` int(11) NOT NULL,
   `Status` int(11) NOT NULL,
   PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `BTWallet` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `AccountId` varchar(32) DEFAULT NULL,
+  `TokenMoney` bigint(20) NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `IX_BTWallet_AccountId` (`AccountId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `BTWalletRecord` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `AccountId` varchar(32) DEFAULT NULL,
+  `Destination` text,
+  `Note` text,
+  `Source` text,
+  `TokenMoney` bigint(20) NOT NULL,
+  `Type` int(11) NOT NULL,
+  `WalletId` bigint(20) NOT NULL,
+  PRIMARY KEY (`Id`),
+  KEY `IX_BTWalletRecord_AccountId` (`AccountId`),
+  KEY `IX_BTWalletRecord_WalletId` (`WalletId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `SecurityKeychain` (

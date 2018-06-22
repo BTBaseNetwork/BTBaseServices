@@ -10,11 +10,13 @@ namespace BTBaseServices.DAL
         public virtual DbSet<BTDeviceSession> BTDeviceSession { get; set; }
         public virtual DbSet<BTMember> BTMember { get; set; }
         public virtual DbSet<BTMemberOrder> BTMemberOrder { get; set; }
-
         public virtual DbSet<SecurityKeychain> SecurityKeychain { get; set; }
         public virtual DbSet<UpdatePasswordRecord> UpdatePasswordRecord { get; set; }
         public virtual DbSet<UpdateEmailRecord> UpdateEmailRecord { get; set; }
         public virtual DbSet<BTSecurityCode> BTSecurityCode { get; set; }
+        public virtual DbSet<BTWallet> BTWallet { get; set; }
+        public virtual DbSet<BTWalletRecord> BTWalletRecord { get; set; }
+        public virtual DbSet<AppleStoreIAPOrder> AppleStoreIAPOrder { get; set; }
 
         public BTBaseDbContext(DbContextOptions options) : base(options) { }
 
@@ -29,6 +31,9 @@ namespace BTBaseServices.DAL
             BTBaseServices.Models.UpdatePasswordRecord.OnDbContextModelCreating(modelBuilder);
             BTBaseServices.Models.UpdateEmailRecord.OnDbContextModelCreating(modelBuilder);
             BTBaseServices.Models.BTSecurityCode.OnDbContextModelCreating(modelBuilder);
+            BTBaseServices.Models.BTWallet.OnDbContextModelCreating(modelBuilder);
+            BTBaseServices.Models.BTWalletRecord.OnDbContextModelCreating(modelBuilder);
+            BTBaseServices.Models.AppleStoreIAPOrder.OnDbContextModelCreating(modelBuilder);
         }
     }
 }
