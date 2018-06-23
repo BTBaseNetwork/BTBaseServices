@@ -6,7 +6,7 @@
     <PackageReference Include="BTBaseSharpLib" Version="1.0.1"/>
     <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.11"/>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2"/>
-    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.2"/>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.4"/>
     <PackageReference Include="Ahoo.Aliyun.Acs.Dm" Version="1.2.0"/>
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.5.4"/>
   </ItemGroup>
