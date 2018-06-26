@@ -145,5 +145,12 @@ namespace BTBaseServices.Services
         {
             return dbContext.BTAccount.Count();
         }
+
+        public int CountNewAccount(BTBaseDbContext dbContext, DateTime start, DateTime end)
+        {
+            var startTs = DateTimeUtil.UnixTimeSpanOfDateTime(start).TotalSeconds;
+            var endTs = DateTimeUtil.UnixTimeSpanOfDateTime(end).TotalSeconds;
+            return dbContext.BTAccount.Count(x => x.SignDateTs >= startTs && x.SignDateTs <= endTs);
+        }
     }
 }
