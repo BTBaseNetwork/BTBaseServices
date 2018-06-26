@@ -8,6 +8,7 @@ CREATE TABLE `AppleStoreIAPOrder` (
   `OrderKey` varchar(512) DEFAULT NULL,
   `ProductId` text,
   `ReceiptData` text,
+  `SandBox` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 

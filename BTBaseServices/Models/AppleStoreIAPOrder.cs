@@ -10,6 +10,7 @@ namespace BTBaseServices.Models
         public string ProductId { get; set; }
         public string ReceiptData { get; set; }
         public DateTime Date { get; set; }
+        public bool SandBox { get; set; }
     }
 
     public partial class AppleStoreIAPOrder
@@ -24,6 +25,7 @@ namespace BTBaseServices.Models
                 ac.Property(e => e.ProductId);
                 ac.Property(e => e.ReceiptData);
                 ac.Property(e => e.Date);
+                ac.Property(e => e.SandBox);
             });
         }
     }
