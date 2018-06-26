@@ -140,5 +140,10 @@ namespace BTBaseServices.Services
 
             return null;
         }
+
+        public int CountAccount(BTBaseDbContext dbContext)
+        {
+            return dbContext.BTAccount.Count();
+        }
     }
 }

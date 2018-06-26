@@ -135,5 +135,11 @@ namespace BTBaseServices.Services
             dbContext.BTDeviceSession.UpdateRange(sessions);
             dbContext.SaveChanges();
         }
+
+        public int OnlineSessions(BTBaseDbContext dbContext, TimeSpan timeSpan)
+        {
+            var dateLimit = DateTimeUtil.UnixTimeSpanOfDateTime(DateTime.Now - timeSpan).TotalSeconds;
+            return dbContext.BTDeviceSession.Count(x => x.IsValid && x.LoginDateTs > dateLimit);
+        }
     }
 }
