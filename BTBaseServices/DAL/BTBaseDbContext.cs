@@ -17,6 +17,7 @@ namespace BTBaseServices.DAL
         public virtual DbSet<BTWallet> BTWallet { get; set; }
         public virtual DbSet<BTWalletRecord> BTWalletRecord { get; set; }
         public virtual DbSet<AppleStoreIAPOrder> AppleStoreIAPOrder { get; set; }
+        public virtual DbSet<BTUserAsset> BTUserAsset { get; set; }
 
         public BTBaseDbContext(DbContextOptions options) : base(options) { }
 
@@ -34,6 +35,7 @@ namespace BTBaseServices.DAL
             BTBaseServices.Models.BTWallet.OnDbContextModelCreating(modelBuilder);
             BTBaseServices.Models.BTWalletRecord.OnDbContextModelCreating(modelBuilder);
             BTBaseServices.Models.AppleStoreIAPOrder.OnDbContextModelCreating(modelBuilder);
+            BTBaseServices.Models.BTUserAsset.OnDbContextModelCreating(modelBuilder);
         }
     }
 }

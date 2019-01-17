@@ -121,3 +121,16 @@ CREATE TABLE `UpdatePasswordRecord` (
   `Password` varchar(2048) NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `BTUserAsset` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `AccountId` varchar(32) NOT NULL,
+  `AppBundleId` varchar(255) NOT NULL,
+  `Category` varchar(64) DEFAULT NULL,
+  `AssetsId` varchar(128) DEFAULT NULL,
+  `Amount` int(11) NOT NULL,
+  `CreateDate` datetime(6) NOT NULL,
+  `ModifiedDate` datetime(6) NOT NULL,
+  `Assets` longtext,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=111111 DEFAULT CHARSET=utf8;
